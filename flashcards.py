@@ -1,5 +1,10 @@
 import random
 
+from rich.console import Console
+from rich.prompt import Prompt
+from rich.panel import Panel
+from rich.text import Text
+
 
 def main():
     # Define the dictionary
@@ -54,16 +59,28 @@ def main():
     keys = list(quiz_dict.keys())
     random.shuffle(keys)
 
+    console = Console()
+
     # Iterate over the shuffled keys
     for key in keys:  # Prompt the user for the value
-        user_answer = input(f"What is the value for '{key}'? ")
+        # Display the flashcard
+        flashcard = Panel(
+            Text(key, justify="center", style="bold magenta"),
+            title="Flashcard", border_style="blue")
+        console.print(flashcard)
+
+        # Prompt the user for the value
+        user_answer = Prompt.ask(
+            f"[bold cyan]What is the value for '{key}'?[/bold cyan]")
 
         # Check if the answer is correct
         if user_answer.lower() == quiz_dict[key].lower():
-            print("Correct!")
+            console.print("[bold green]Correct![/bold green]")
             correct_answers += 1
         else:
-            print(f"Wrong! The correct answer is '{quiz_dict[key]}'.")
+            console.print(
+                f"[bold red]Wrong! The correct answer is '{quiz_dict[key]}'."
+                "[/bold red]")
 
     # Display the final score
     print(f"\nYour final score is {correct_answers} out of {len(quiz_dict)}.")
